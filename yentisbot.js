@@ -146,19 +146,19 @@ bot.on("message", message => {
                 }).catch(error => message.channel.send("Error: " + error));
                 break;
             case "&top10":
-                let message = '';
                 let promises = rankings(database, 10)
                     .map(leader => getUser(leader[0]).then(user =>
                         [user,leader[1]]
                     ));
                 Promise.all(promises)
                     .then(results => {
+                        let output = '';
                         let rank = 0;
                         for ([user,count] of results) {
                             rank++;
-                            message += rank + '. ' + user + ' - ' + count + '\n';
+                            output += rank + '. ' + user + ' - ' + count + '\n';
                         };
-                        message.channel.send(message);
+                        message.channel.send(output);
                     });
                 break;
 
