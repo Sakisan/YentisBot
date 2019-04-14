@@ -145,6 +145,22 @@ bot.on("message", message => {
                     else message.channel.send(user.username + " is first place on " + amount + " maps");
                 }).catch(error => message.channel.send("Error: " + error));
                 break;
+            case "&top10":
+                let message = '';
+                let promises = rankings(database, 10)
+                    .map(leader => getUser(leader[0]).then(user =>
+                        [user,leader[1]]
+                    ));
+                Promise.all(promises)
+                    .then(results => {
+                        let rank = 0;
+                        for ([user,count] of results) {
+                            rank++;
+                            message += rank + '. ' + user + ' - ' + count + '\n';
+                        };
+                        message.channel.send(message);
+                    });
+                break;
 
         }
     }
@@ -550,3 +566,19 @@ function saveFile(file, content) {
         console.warn(file + " was saved!");
     });
 }
+
+function rankings(database, size) {
+    let ranking = {};
+    for (const user of Object.values(database)) {
+        if (ranking[user]) {
+            ranking[user]++;
+        } else {
+            ranking[user] = 1;
+        }
+    }
+    delete ranking[''];
+    let leaders = Object.entries(ranking);
+    leaders.sort((a, b) => b[1] - a[1]);
+    return leaders.slice(0, size);
+}
+
