@@ -142,7 +142,7 @@ bot.on("message", message => {
                         }
                     });
                     if (amount === 0) message.channel.send(user.username + " does not have any #1 scores.");
-                    else message.channel.send(user.username + " is first place on (" + amount + " maps)");
+                    else message.channel.send(user.username + " is first place on " + amount + " maps");
                 }).catch(error => message.channel.send("Error: " + error));
                 break;
 
