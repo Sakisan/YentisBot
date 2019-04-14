@@ -131,6 +131,21 @@ bot.on("message", message => {
                     else message.channel.send("Here are all the maps " + user.username + " is first place on (" + amount + " maps):", new Discord.Attachment(Buffer.from(list), "Scores " + user.username + ".html"));
                 }).catch(error => message.channel.send("Error: " + error));
                 break;
+            case "&count":
+                remainder = content.split(" ").slice(1, content.length).join(" ");
+                getUser(remainder).then(user => {
+                    let amount = 0;
+                    user.userId = parseInt(user.userId);
+                    Object.keys(database).forEach(mapId => {
+                        if (database[mapId] === user.userId) {
+                            amount++;
+                        }
+                    });
+                    if (amount === 0) message.channel.send(user.username + " does not have any #1 scores.");
+                    else message.channel.send(user.username + " is first place on (" + amount + " maps)");
+                }).catch(error => message.channel.send("Error: " + error));
+                break;
+
         }
     }
 });
